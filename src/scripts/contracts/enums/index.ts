@@ -1,3 +1,3 @@
 export * from "./EScreenOrientations";
-export * from "./EGameSceneEvents";
 export * from "./ESpinEvents";
+export * from "./EOrientationEvents";

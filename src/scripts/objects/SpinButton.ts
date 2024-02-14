@@ -1,5 +1,5 @@
 import { spinButtonConfig } from "../configs";
-import { EGameSceneEvents, ESpinEvents } from "../contracts";
+import { EOrientationEvents, ESpinEvents } from "../contracts";
 import { OrientationUtil } from "../utils";
 
 export class SpinButton extends Phaser.GameObjects.Sprite {
@@ -21,17 +21,19 @@ export class SpinButton extends Phaser.GameObjects.Sprite {
         this.on(Phaser.Input.Events.POINTER_DOWN, () => {
             this.deactivate();
             this.scene.events.emit(ESpinEvents.START_SPIN);
+            this.scene.events.emit(EOrientationEvents.ADD_ORIENTATION_BLOCKER, "spinAnimationPlaying");
         })
     }
 
     public hangleSpinStop(): void {
         this.scene.events.on(ESpinEvents.STOP_SPIN, () => {
             this.activate();
+            this.scene.events.emit(EOrientationEvents.DELETE_ORIENTATION_BLOCKER, "spinAnimationPlaying");
         })
     }
 
     public handleChangeOrientation(): void {
-        this.scene.events.on(EGameSceneEvents.GAME_SCENE_ORIENTATION_CHANGE, () => {
+        this.scene.events.on(EOrientationEvents.ORIENTATION_CHANGED, () => {
             const currentOrientation = OrientationUtil.get();
             const { x, y } = spinButtonConfig[currentOrientation];
 

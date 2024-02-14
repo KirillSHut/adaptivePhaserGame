@@ -1,3 +1,0 @@
-export enum EGameSceneEvents {
-    GAME_SCENE_ORIENTATION_CHANGE = "GAME_SCENE_ORIENTATION_CHANGE"
-}

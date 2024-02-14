@@ -8,7 +8,7 @@ import { OrientationUtil } from './utils';
 const currentOrientation = OrientationUtil.get();
 
 const gameSize = gameSizeConfig[currentOrientation];
-console.log(currentOrientation);
+
 const DEFAULT_WIDTH = gameSize.width;
 const DEFAULT_HEIGHT = gameSize.height;
 

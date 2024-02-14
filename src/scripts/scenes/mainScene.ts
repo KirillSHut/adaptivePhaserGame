@@ -1,12 +1,12 @@
 import { Logo, SpinButton } from '../objects';
 import { OrientationChangeManager } from '../adaptive';
 import { logoConfig, gameSceneTextConfig, spinButtonConfig } from '../configs';
-import { EGameSceneEvents, EScreenOrientations } from '../contracts';
+import { EOrientationEvents, EScreenOrientations } from '../contracts';
 import { gameSizeConfig } from '../configs/GameSizeConfig';
 import { OrientationUtil } from '../utils';
 
 export default class MainScene extends Phaser.Scene {
-  public orientationChangeManager: OrientationChangeManager = new OrientationChangeManager(this);
+  public orientationChangeManager: OrientationChangeManager;
   public logo: Logo;
   public spinButton: SpinButton;
   public orientationText: Phaser.GameObjects.Text;
@@ -16,6 +16,8 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
+    this.createOrientationChangeManager();
+
     this.createPhaserLogo();
     this.createSpinButton();
 
@@ -23,8 +25,12 @@ export default class MainScene extends Phaser.Scene {
     this.handleOrientationChange();
   }
 
+  private createOrientationChangeManager(): void {
+    this.orientationChangeManager = new OrientationChangeManager(this);
+  }
+
   handleOrientationChange(): void {
-    this.events.on(EGameSceneEvents.GAME_SCENE_ORIENTATION_CHANGE, () => {
+    this.events.on(EOrientationEvents.ORIENTATION_CHANGED, () => {
       const { width, height } = gameSizeConfig[this.currentOrientation];
 
       this.orientationText.setText(this.currentOrientation);
