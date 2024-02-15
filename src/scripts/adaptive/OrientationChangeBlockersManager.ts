@@ -2,6 +2,7 @@ import { EOrientationEvents } from "../contracts";
 
 export class OrientationChangeBlockersManager {
     private _blockers: Set<string> = new Set();
+    private _alreadyUsedScenes: Set<string> = new Set();
     private _delayedOrientationChange: (() => void) | null = null;
 
     constructor(private scene: Phaser.Scene) {
@@ -9,9 +10,30 @@ export class OrientationChangeBlockersManager {
     }
 
     private init(): void {
+        this.addSceneToAlreadyUsed();
+        this.addBlockersHandlers();
+    }
+
+    private addBlockersHandlers(): void {
         this.handleAddBlocker();
         this.handleDeleteBlocker();
         this.handleDeleteAllBlocker();
+    }
+
+    public setScene(scene: Phaser.Scene): void {
+        const sceneKey = scene.sys.settings.key;
+
+        this.scene = scene;
+        if (this._alreadyUsedScenes.has(sceneKey)) return
+
+        this.addBlockersHandlers();
+        this.addSceneToAlreadyUsed();
+    }
+
+    private addSceneToAlreadyUsed(): void {
+        const sceneKey = this.scene.sys.settings.key;
+
+        this._alreadyUsedScenes.add(sceneKey);
     }
 
     private handleAddBlocker(): void {

@@ -2,12 +2,12 @@ import 'phaser'
 import MainScene from './scenes/mainScene'
 import PreloadScene from './scenes/preloadScene'
 import { gameSizeConfig } from './configs/GameSizeConfig';
-import { OrientationUtil } from './utils';
+import { SingletonManager } from './manager';
+import { OrientationStateManager } from './adaptive';
 
 // Changing sizes based on orientation
-const currentOrientation = OrientationUtil.get();
-
-const gameSize = gameSizeConfig[currentOrientation];
+const { currentGameOrientation } = SingletonManager.getInstance(OrientationStateManager);
+const gameSize = gameSizeConfig[currentGameOrientation];
 
 const DEFAULT_WIDTH = gameSize.width;
 const DEFAULT_HEIGHT = gameSize.height;
@@ -36,5 +36,4 @@ const config = {
 
 window.addEventListener('load', () => {
   const game = new Phaser.Game(config);
-
 })

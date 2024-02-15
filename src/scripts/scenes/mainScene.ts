@@ -1,12 +1,14 @@
 import { Logo, SpinButton } from '../objects';
-import { OrientationChangeManager } from '../adaptive';
+import { OrientationChangeManager, OrientationStateManager } from '../adaptive';
 import { logoConfig, gameSceneTextConfig, spinButtonConfig } from '../configs';
 import { EOrientationEvents, EScreenOrientations } from '../contracts';
 import { gameSizeConfig } from '../configs/GameSizeConfig';
-import { OrientationUtil } from '../utils';
+import { SingletonManager } from '../manager';
 
 export default class MainScene extends Phaser.Scene {
   public orientationChangeManager: OrientationChangeManager;
+  public orientationStateManager: OrientationStateManager;
+
   public logo: Logo;
   public spinButton: SpinButton;
   public orientationText: Phaser.GameObjects.Text;
@@ -17,23 +19,28 @@ export default class MainScene extends Phaser.Scene {
 
   create() {
     this.createOrientationChangeManager();
+    this.createOrientationStateManager();
 
     this.createPhaserLogo();
     this.createSpinButton();
-
     this.createOrientationText();
+
     this.handleOrientationChange();
   }
 
   private createOrientationChangeManager(): void {
-    this.orientationChangeManager = new OrientationChangeManager(this);
+    this.orientationChangeManager = SingletonManager.getInstance(OrientationChangeManager, this);
   }
 
-  handleOrientationChange(): void {
-    this.events.on(EOrientationEvents.ORIENTATION_CHANGED, () => {
-      const { width, height } = gameSizeConfig[this.currentOrientation];
+  private createOrientationStateManager(): void {
+    this.orientationStateManager = SingletonManager.getInstance(OrientationStateManager);
+  }
 
-      this.orientationText.setText(this.currentOrientation);
+  private handleOrientationChange(): void {
+    this.events.on(EOrientationEvents.ORIENTATION_CHANGED, () => {
+      const { width, height } = gameSizeConfig[this.currentGameOrientation];
+
+      this.orientationText.setText(this.currentGameOrientation);
       this.game.scale.setGameSize(width, height);
       this.game.scale.refresh();
       this.physics.world.setBounds(0, 0, width, height);
@@ -41,26 +48,26 @@ export default class MainScene extends Phaser.Scene {
     })
   }
 
-  createOrientationText(): void {
-    const textConfig = gameSceneTextConfig[this.currentOrientation];
+  private createOrientationText(): void {
+    const textConfig = gameSceneTextConfig[this.currentGameOrientation];
 
     this.orientationText = this.add.text(30, 15, textConfig.text).setOrigin(0, 0);;
     this.orientationText.setStyle(textConfig.styles);
   }
 
-  createPhaserLogo(): void {
-    const { x, y } = logoConfig[this.currentOrientation];
+  private createPhaserLogo(): void {
+    const { x, y } = logoConfig[this.currentGameOrientation];
 
     this.logo = new Logo(this, x, y);
   }
 
-  createSpinButton(): void {
-    const { x, y } = spinButtonConfig[this.currentOrientation];
+  private createSpinButton(): void {
+    const { x, y } = spinButtonConfig[this.currentGameOrientation];
 
     this.spinButton = new SpinButton(this, x, y, "interface", "spinDefault");
   }
 
-  public get currentOrientation(): EScreenOrientations {
-    return OrientationUtil.get();
+  public get currentGameOrientation(): EScreenOrientations {
+    return this.orientationStateManager.currentGameOrientation;
   }
 } 
