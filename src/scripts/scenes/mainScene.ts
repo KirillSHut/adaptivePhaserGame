@@ -30,6 +30,8 @@ export default class MainScene extends Phaser.Scene {
 
   private createOrientationChangeManager(): void {
     this.orientationChangeManager = SingletonManager.getInstance(OrientationChangeManager, this);
+
+    this.orientationChangeManager.setScene(this);
   }
 
   private createOrientationStateManager(): void {

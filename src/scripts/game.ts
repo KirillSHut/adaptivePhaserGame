@@ -1,4 +1,5 @@
 import 'phaser'
+import "phaser/plugins/spine/dist/SpinePlugin";
 import MainScene from './scenes/mainScene'
 import PreloadScene from './scenes/preloadScene'
 import { gameSizeConfig } from './configs/GameSizeConfig';
@@ -31,6 +32,12 @@ const config = {
       debug: false,
       gravity: { y: 400 }
     }
+  },
+  plugins: {
+    scene: [
+      // @ts-ignore
+      { key: "SpinePlugin", plugin: window.SpinePlugin, mapping: "spine" }
+    ]
   }
 }
 
