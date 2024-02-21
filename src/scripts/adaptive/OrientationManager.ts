@@ -1,30 +1,25 @@
+import { gameSizeConfig } from "../configs";
 import { EOrientationEvents, EScreenOrientations } from "../contracts";
 import { SingletonManager } from "../manager";
 import { OrientationChangeBlockersManager } from "./OrientationChangeBlockersManager";
 import { OrientationStateManager } from "./OrientationStateManager";
 
-export class OrientationChangeManager {
-    private orientationChangeBlockersManager: OrientationChangeBlockersManager = SingletonManager.getInstance(OrientationChangeBlockersManager, this.scene);
+export class OrientationManager {
+    private orientationChangeBlockersManager: OrientationChangeBlockersManager = SingletonManager.getInstance(OrientationChangeBlockersManager, this.game);
     private orientationStateManager: OrientationStateManager = SingletonManager.getInstance(OrientationStateManager);
     private _lastEndOrientationChange: ((emitEvent: boolean) => void) | void;
     private _timeOutTimeConfig: number = 500;
     private _timeout: NodeJS.Timeout | null = null;
 
-    constructor(private scene: Phaser.Scene) {
-        this.init();
+    // @note Also must be an orientationConfig
+    constructor(private game: Phaser.Game) { }
+
+    public init(): void {
+        this.orientationChangeBlockersManager.init();
+        this.addResizeHandler();
     }
 
-    private init(): void {
-        this.handleResize();
-    }
-
-    public setScene(scene: Phaser.Scene): void {
-        this.scene = scene;
-
-        this.orientationChangeBlockersManager.setScene(scene);
-    }
-
-    private handleResize(): void {
+    private addResizeHandler(): void {
         window.addEventListener("resize", () => {
             if (this.currentGameOrientation !== this.currentWindowOrientation) {
                 if (this._lastEndOrientationChange) {
@@ -79,11 +74,19 @@ export class OrientationChangeManager {
 
         this._timeout = null;
         if (emitEvent) {
-            const currentWindowOrientation = this.currentWindowOrientation;
+            this.setCurrentGameOrientation(this.currentWindowOrientation);
 
-            this.setCurrentGameOrientation(currentWindowOrientation);
-            this.scene.events.emit(EOrientationEvents.ORIENTATION_CHANGED);
+            this.changeGameOrientation();
+            this.game.events.emit(EOrientationEvents.ORIENTATION_CHANGED, this.currentGameOrientation);
         }
+    }
+
+    // @note temprary solution
+    public changeGameOrientation(): void {
+        const { width, height } = gameSizeConfig[this.currentGameOrientation];
+
+        this.game.scale.setGameSize(width, height);
+        this.game.scale.refresh();
     }
 
     public setCurrentGameOrientation(orientation: EScreenOrientations): void {

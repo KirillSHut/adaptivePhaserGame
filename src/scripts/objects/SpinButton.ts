@@ -1,11 +1,7 @@
-import { OrientationStateManager } from "../adaptive";
 import { spinButtonConfig } from "../configs";
-import { EOrientationEvents, ESpinEvents } from "../contracts";
-import { SingletonManager } from "../manager";
+import { EOrientationEvents, EScreenOrientations, ESpinEvents } from "../contracts";
 
 export class SpinButton extends Phaser.GameObjects.Sprite {
-    private orientationStateManager: OrientationStateManager = SingletonManager.getInstance(OrientationStateManager);
-
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame: string) {
         super(scene, x, y, texture, frame);
 
@@ -15,30 +11,31 @@ export class SpinButton extends Phaser.GameObjects.Sprite {
     public init(): void {
         this.scene.add.existing(this);
         this.activate();
-        this.handleChangeOrientation();
-        this.handlePointerDown();
-        this.hangleSpinStop();
+        this.addOrientationChangeHandler();
+        this.addPointerDownHandler();
+        this.addSpinStopHandler();
     }
 
-    public handlePointerDown(): void {
+    public addPointerDownHandler(): void {
         this.on(Phaser.Input.Events.POINTER_DOWN, () => {
             this.deactivate();
+
             this.scene.events.emit(ESpinEvents.START_SPIN);
-            this.scene.events.emit(EOrientationEvents.ADD_ORIENTATION_BLOCKER, "spinAnimationPlaying");
+            this.scene.game.events.emit(EOrientationEvents.ADD_ORIENTATION_BLOCKER, "spinAnimationPlaying");
         })
     }
 
-    public hangleSpinStop(): void {
+    public addSpinStopHandler(): void {
         this.scene.events.on(ESpinEvents.STOP_SPIN, () => {
             this.activate();
-            this.scene.events.emit(EOrientationEvents.DELETE_ORIENTATION_BLOCKER, "spinAnimationPlaying");
+
+            this.scene.game.events.emit(EOrientationEvents.DELETE_ORIENTATION_BLOCKER, "spinAnimationPlaying");
         })
     }
 
-    public handleChangeOrientation(): void {
-        this.scene.events.on(EOrientationEvents.ORIENTATION_CHANGED, () => {
-            const currentOrientation = this.orientationStateManager.currentGameOrientation;
-            const { x, y } = spinButtonConfig[currentOrientation];
+    public addOrientationChangeHandler(): void {
+        this.scene.game.events.on(EOrientationEvents.ORIENTATION_CHANGED, (currentGameOrientation: EScreenOrientations) => {
+            const { x, y } = spinButtonConfig[currentGameOrientation];
 
             this.setPosition(x, y);
         })

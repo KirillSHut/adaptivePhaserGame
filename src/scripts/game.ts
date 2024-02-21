@@ -1,10 +1,9 @@
 import 'phaser'
 import "phaser/plugins/spine/dist/SpinePlugin";
-import MainScene from './scenes/mainScene'
-import PreloadScene from './scenes/preloadScene'
+import { GameScene, PreloadScene } from './scenes';
 import { gameSizeConfig } from './configs/GameSizeConfig';
 import { SingletonManager } from './manager';
-import { OrientationStateManager } from './adaptive';
+import { OrientationManager, OrientationStateManager } from './adaptive';
 
 // Changing sizes based on orientation
 const { currentGameOrientation } = SingletonManager.getInstance(OrientationStateManager);
@@ -25,7 +24,6 @@ const config = {
     width: DEFAULT_WIDTH,
     height: DEFAULT_HEIGHT
   },
-  scene: [PreloadScene, MainScene],
   physics: {
     default: 'arcade',
     arcade: {
@@ -41,6 +39,24 @@ const config = {
   }
 }
 
+class GameEngine extends Phaser.Game {
+  private orientationManager: OrientationManager = new OrientationManager(this);
+
+  constructor() {
+    super(config);
+
+    this.initOrientationManager();
+
+    this.scene.add("PreloadScene", PreloadScene);
+    this.scene.add("GameScene", GameScene);
+    this.scene.start("PreloadScene");
+  }
+
+  private initOrientationManager() {
+    this.orientationManager.init();
+  }
+}
+
 window.addEventListener('load', () => {
-  const game = new Phaser.Game(config);
+  const game = new GameEngine();
 })
