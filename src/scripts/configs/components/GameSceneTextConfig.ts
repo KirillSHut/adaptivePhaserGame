@@ -1,4 +1,4 @@
-import { EScreenOrientations } from "../contracts";
+import { EScreenOrientations } from "../../contracts";
 
 
 export const gameSceneTextConfig = {

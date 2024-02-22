@@ -1,12 +1,14 @@
 import { gameSizeConfig } from "../configs";
 import { EOrientationEvents, EScreenOrientations } from "../contracts";
-import { SingletonManager } from "../manager";
+import { SingletonManager } from "../decorators";
 import { OrientationChangeBlockersManager } from "./OrientationChangeBlockersManager";
 import { OrientationStateManager } from "./OrientationStateManager";
 
 export class OrientationManager {
     private orientationChangeBlockersManager: OrientationChangeBlockersManager = SingletonManager.getInstance(OrientationChangeBlockersManager, this.game);
     private orientationStateManager: OrientationStateManager = SingletonManager.getInstance(OrientationStateManager);
+
+    private _isOrientationChangeDelayed: boolean = false;
     private _lastEndOrientationChange: ((emitEvent: boolean) => void) | void;
     private _timeOutTimeConfig: number = 500;
     private _timeout: NodeJS.Timeout | null = null;
@@ -17,6 +19,7 @@ export class OrientationManager {
     public init(): void {
         this.orientationChangeBlockersManager.init();
         this.addResizeHandler();
+        this.addAllBlockersDeletedHandler();
     }
 
     private addResizeHandler(): void {
@@ -32,30 +35,70 @@ export class OrientationManager {
         })
     }
 
+    private addAllBlockersDeletedHandler(): void {
+        this.game.events.on(EOrientationEvents.ALL_BLOCKERS_DELETED, () => {
+            if (!this.isOrientationChangeDelayed) return;
+
+            this.varifyOrientationChange();
+        })
+    }
+
     private varifyOrientationChange(): void {
         switch (true) {
             case (this.areNoBlockersAndOrientationChanged):
+                console.log("No blockers orientation changed");
+
                 this._lastEndOrientationChange!(true);
-                this.clearDelayedOrientationChangeCall();
+                this.setIsOrientationChangeDelayed(false);
                 break
 
             case (this.areBlockersAndOrientationChanged):
-                this.setDelayedOrientationChange();
+                console.log("BLOCKERSSS");
+
+
+                this.setIsOrientationChangeDelayed(true);
                 break
 
             case (this.orientationHasNotChanged):
-                this.clearDelayedOrientationChangeCall();
+                console.log("Orientation hasn`t changed");
+
+                this.setIsOrientationChangeDelayed(false);
                 break
         }
     }
 
-    private clearDelayedOrientationChangeCall(): void {
-        this.orientationChangeBlockersManager.clearDelayedOrientationChange();
+    private get isOrientationChangeDelayed(): boolean {
+        return this._isOrientationChangeDelayed;
     }
 
-    private setDelayedOrientationChange(): void {
-        this.orientationChangeBlockersManager.delayedOrientationChange = this.varifyOrientationChange.bind(this);
+    private setIsOrientationChangeDelayed(isDelayed: boolean): void {
+        this._isOrientationChangeDelayed = isDelayed;
     }
+
+    // private varifyOrientationChange(): void {
+    //     switch (true) {
+    //         case (this.areNoBlockersAndOrientationChanged):
+    //             this._lastEndOrientationChange!(true);
+    //             this.clearDelayedOrientationChangeCall();
+    //             break
+
+    //         case (this.areBlockersAndOrientationChanged):
+    //             this.setDelayedOrientationChange();
+    //             break
+
+    //         case (this.orientationHasNotChanged):
+    //             this.clearDelayedOrientationChangeCall();
+    //             break
+    //     }
+    // }
+
+    // private clearDelayedOrientationChangeCall(): void {
+    //     this.orientationChangeBlockersManager.clearDelayedOrientationChange();
+    // }
+
+    // private setDelayedOrientationChange(): void {
+    //     this.orientationChangeBlockersManager.delayedOrientationChange = this.varifyOrientationChange.bind(this);
+    // }
 
     private get areNoBlockersAndOrientationChanged(): boolean {
         return !this.hasBlockers && (this.currentGameOrientation !== this.currentWindowOrientation);

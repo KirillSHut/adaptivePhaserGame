@@ -2,7 +2,7 @@ import { EOrientationEvents } from "../contracts";
 
 export class OrientationChangeBlockersManager {
     private _blockers: Set<string> = new Set();
-    private _delayedOrientationChange: (() => void) | null = null;
+    // private _delayedOrientationChange: (() => void) | null = null;
 
     constructor(private game: Phaser.Game) { }
 
@@ -26,7 +26,9 @@ export class OrientationChangeBlockersManager {
         this.game.events.on(EOrientationEvents.DELETE_ORIENTATION_BLOCKER, (blocker: string) => {
             this._blockers.delete(blocker);
 
-            if (this._delayedOrientationChange && this._blockers.size === 0) this._delayedOrientationChange();
+            if (this._blockers.size === 0) this.emitAllBlockersDeleted();
+            // old
+            // if (this._delayedOrientationChange && this._blockers.size === 0) this._delayedOrientationChange();
         });
     }
 
@@ -34,18 +36,24 @@ export class OrientationChangeBlockersManager {
         this.game.events.on(EOrientationEvents.DELETE_ALL_ORIENTATION_BLOCKERS, () => {
             this._blockers.clear();
 
-            if (this._delayedOrientationChange) this._delayedOrientationChange();
+            this.emitAllBlockersDeleted();
+            // old
+            // if (this._delayedOrientationChange) this._delayedOrientationChange();
         });
     }
 
-    public clearDelayedOrientationChange(): void {
-        this._delayedOrientationChange = null;
+    private emitAllBlockersDeleted(): void {
+        this.game.events.emit(EOrientationEvents.ALL_BLOCKERS_DELETED);
     }
 
+    // public clearDelayedOrientationChange(): void {
+    //     this._delayedOrientationChange = null;
+    // }
+
     // @note change this code to another solution
-    public set delayedOrientationChange(delayedOrientationChange: () => void) {
-        this._delayedOrientationChange = delayedOrientationChange;
-    }
+    // public set delayedOrientationChange(delayedOrientationChange: () => void) {
+    //     this._delayedOrientationChange = delayedOrientationChange;
+    // }
 
     public get hasBlockers(): boolean {
         return this._blockers.size === 0 ? false : true;

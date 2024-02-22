@@ -1,8 +1,8 @@
-import { Logo, SpinButton } from '../objects';
-import { OrientationStateManager } from '../adaptive';
+import { Logo, SpinButton } from '../components';
+import { OrientationStateManager } from '../orientation';
 import { logoConfig, gameSceneTextConfig, spinButtonConfig } from '../configs';
 import { EOrientationEvents, EScreenOrientations } from '../contracts';
-import { SingletonManager } from '../manager';
+import { SingletonManager } from '../decorators';
 
 export class GameScene extends Phaser.Scene {
     public orientationStateManager: OrientationStateManager = SingletonManager.getInstance(OrientationStateManager);

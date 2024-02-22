@@ -1,5 +1,4 @@
-import { EScreenOrientations } from "../contracts";
-
+import { EScreenOrientations } from "../../contracts";
 
 export const logoConfig = {
     [EScreenOrientations.LANDSCAPE_DESKTOP]: {

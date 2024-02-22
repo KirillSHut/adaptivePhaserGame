@@ -1,7 +1,7 @@
-import { OrientationStateManager } from "../adaptive";
+import { OrientationStateManager } from "../orientation";
 import { preloadSpineConfig } from "../configs";
 import { EOrientationEvents, EScreenOrientations } from "../contracts";
-import { SingletonManager } from "../manager";
+import { SingletonManager } from "../decorators";
 
 export class PreloadScene extends Phaser.Scene {
     public orientationStateManager: OrientationStateManager = SingletonManager.getInstance(OrientationStateManager);

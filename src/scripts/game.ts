@@ -2,8 +2,8 @@ import 'phaser'
 import "phaser/plugins/spine/dist/SpinePlugin";
 import { GameScene, PreloadScene } from './scenes';
 import { gameSizeConfig } from './configs/GameSizeConfig';
-import { SingletonManager } from './manager';
-import { OrientationManager, OrientationStateManager } from './adaptive';
+import { SingletonManager } from './decorators';
+import { OrientationManager, OrientationStateManager } from './orientation';
 
 // Changing sizes based on orientation
 const { currentGameOrientation } = SingletonManager.getInstance(OrientationStateManager);
@@ -28,7 +28,7 @@ const config = {
     default: 'arcade',
     arcade: {
       debug: false,
-      gravity: { y: 400 }
+      gravity: { x: 0, y: 0 }
     }
   },
   plugins: {
