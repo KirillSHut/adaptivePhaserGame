@@ -1,4 +1,4 @@
-export enum EScreenOrientations {
+export enum EScreenOrientationWithDevice {
     LANDSCAPE_DESKTOP = "LANDSCAPE_DESKTOP",
     PORTRAIT_DESKTOP = "LANDSCAPE_DESKTOP",
     LANDSCAPE_MOBILE = "LANDSCAPE_MOBILE",

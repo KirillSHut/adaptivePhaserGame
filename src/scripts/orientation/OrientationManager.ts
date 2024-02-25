@@ -1,5 +1,6 @@
 import { gameSizeConfig } from "../configs";
-import { EOrientationEvents, EScreenOrientations } from "../contracts";
+import { EOrientationEvents, EScreenOrientationWithDevice } from "../contracts";
+import { IOrientationConfig } from "../contracts/interface/IOrientationConfig";
 import { SingletonManager } from "../decorators";
 import { OrientationChangeBlockersManager } from "./OrientationChangeBlockersManager";
 import { OrientationStateManager } from "./OrientationStateManager";
@@ -9,25 +10,34 @@ export class OrientationManager {
     private orientationStateManager: OrientationStateManager = SingletonManager.getInstance(OrientationStateManager);
 
     private _isOrientationChangeDelayed: boolean = false;
-    private _timeOutTimeConfig: number = 500;
     private _lastOrientationChangeTimeout: NodeJS.Timeout | null = null;
 
-    // @note Also must be an orientationConfig
-    constructor(private game: Phaser.Game) { }
+    constructor(private game: Phaser.Game, private config: IOrientationConfig) { }
 
     public init(): void {
-        this.orientationChangeBlockersManager.init();
-        this.addResizeHandler();
-        this.addAllBlockersDeletedHandler();
+        const { isOrientationChangeSupported, defaultOrientation, supportedOrientations } = this.config;
+
+        if (isOrientationChangeSupported) {
+            this.orientationChangeBlockersManager.init();
+            this.addResizeHandler();
+            this.addAllBlockersDeletedHandler();
+        }
+
+        this.orientationStateManager.init({ isOrientationChangeSupported, defaultOrientation, supportedOrientations });
+        this.changeGameSize();
     }
 
     private addResizeHandler(): void {
+        const resizeHandler = this.getResizeHandler();
+
         window.addEventListener("resize", () => {
-            if (this.currentGameOrientation !== this.currentWindowOrientation) {
-                this.clearLastOrientationChangeTimeout();
-                this._lastOrientationChangeTimeout = setTimeout(() => this.varifyOrientationChange(), this._timeOutTimeConfig)
-            }
+            if (this.currentGameOrientation !== this.currentWindowOrientation) resizeHandler();
         })
+    }
+
+    private resizeHandlerWithTimeout(): void {
+        this.clearLastOrientationChangeTimeout();
+        this._lastOrientationChangeTimeout = setTimeout(() => this.varifyOrientationChange(), this.config.orientationChangeTimeoutDuration)
     }
 
     private addAllBlockersDeletedHandler(): void {
@@ -69,7 +79,6 @@ export class OrientationManager {
         this.game.events.emit(EOrientationEvents.ORIENTATION_CHANGED, this.currentGameOrientation);
     }
 
-    // @note temprary solution
     public changeGameSize(): void {
         const { width, height } = gameSizeConfig[this.currentGameOrientation];
 
@@ -77,12 +86,16 @@ export class OrientationManager {
         this.game.scale.refresh();
     }
 
-    public setCurrentGameOrientation(orientation: EScreenOrientations): void {
+    public setCurrentGameOrientation(orientation: EScreenOrientationWithDevice): void {
         this.orientationStateManager.setCurrentGameOrientation(orientation);
     }
 
     private setIsOrientationChangeDelayed(isDelayed: boolean): void {
         this._isOrientationChangeDelayed = isDelayed;
+    }
+
+    private getResizeHandler(): () => void {
+        return this.config.orientationChangeTimeoutDuration > 0 ? this.resizeHandlerWithTimeout.bind(this) : this.varifyOrientationChange;
     }
 
     private get areNoBlockersAndOrientationChanged(): boolean {
@@ -101,11 +114,11 @@ export class OrientationManager {
         return this._isOrientationChangeDelayed;
     }
 
-    public get currentWindowOrientation(): EScreenOrientations {
+    public get currentWindowOrientation(): EScreenOrientationWithDevice {
         return this.orientationStateManager.currentWindowOrientation;
     }
 
-    public get currentGameOrientation(): EScreenOrientations {
+    public get currentGameOrientation(): EScreenOrientationWithDevice {
         return this.orientationStateManager.currentGameOrientation;
     }
 

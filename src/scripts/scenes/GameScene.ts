@@ -1,7 +1,7 @@
 import { Logo, SpinButton } from '../components';
 import { OrientationStateManager } from '../orientation';
 import { logoConfig, gameSceneTextConfig, spinButtonConfig } from '../configs';
-import { EOrientationEvents, EScreenOrientations } from '../contracts';
+import { EOrientationEvents, EScreenOrientationWithDevice } from '../contracts';
 import { SingletonManager } from '../decorators';
 
 export class GameScene extends Phaser.Scene {
@@ -31,7 +31,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     private addOrientationTextOrientationChangeHandler(): void {
-        this.game.events.on(EOrientationEvents.ORIENTATION_CHANGED, (currentGameOrientation: EScreenOrientations) => {
+        this.game.events.on(EOrientationEvents.ORIENTATION_CHANGED, (currentGameOrientation: EScreenOrientationWithDevice) => {
             const { text } = gameSceneTextConfig[currentGameOrientation];
 
             this.orientationText.setText(text);
@@ -50,7 +50,7 @@ export class GameScene extends Phaser.Scene {
         this.spinButton = new SpinButton(this, x, y, "interface", "spinDefault");
     }
 
-    public get currentGameOrientation(): EScreenOrientations {
+    public get currentGameOrientation(): EScreenOrientationWithDevice {
         return this.orientationStateManager.currentGameOrientation;
     }
 } 

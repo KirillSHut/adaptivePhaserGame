@@ -1,16 +1,16 @@
-import { EScreenOrientations } from "../../contracts";
+import { EScreenOrientationWithDevice } from "../../contracts";
 
 
 export const spinButtonConfig = {
-    [EScreenOrientations.LANDSCAPE_DESKTOP]: {
+    [EScreenOrientationWithDevice.LANDSCAPE_DESKTOP]: {
         x: 950,
         y: 900
     },
-    [EScreenOrientations.LANDSCAPE_MOBILE]: {
+    [EScreenOrientationWithDevice.LANDSCAPE_MOBILE]: {
         x: 950,
         y: 900
     },
-    [EScreenOrientations.PORTRAIT_MOBILE]: {
+    [EScreenOrientationWithDevice.PORTRAIT_MOBILE]: {
         x: 500,
         y: 1600
     },

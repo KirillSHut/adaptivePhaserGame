@@ -1,5 +1,5 @@
 import { spinButtonConfig } from "../configs";
-import { EOrientationEvents, EScreenOrientations, ESpinEvents } from "../contracts";
+import { EOrientationEvents, EScreenOrientationWithDevice, ESpinEvents } from "../contracts";
 
 export class SpinButton extends Phaser.GameObjects.Sprite {
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame: string) {
@@ -34,7 +34,7 @@ export class SpinButton extends Phaser.GameObjects.Sprite {
     }
 
     public addOrientationChangeHandler(): void {
-        this.scene.game.events.on(EOrientationEvents.ORIENTATION_CHANGED, (currentGameOrientation: EScreenOrientations) => {
+        this.scene.game.events.on(EOrientationEvents.ORIENTATION_CHANGED, (currentGameOrientation: EScreenOrientationWithDevice) => {
             const { x, y } = spinButtonConfig[currentGameOrientation];
 
             this.setPosition(x, y);
