@@ -1,3 +1,3 @@
 import { IOrientationConfig } from "./IOrientationConfig";
 
-export interface IOrientationStateManagedConfig extends Pick<IOrientationConfig, "defaultOrientation" | "isOrientationChangeSupported" | "supportedOrientations"> { }
+export interface IOrientationStateManagedConfig extends Pick<IOrientationConfig, "standardOrientation" | "isOrientationChangeSupported" | "supportedOrientations"> { }

@@ -1,13 +1,12 @@
 import 'phaser'
 import "phaser/plugins/spine/dist/SpinePlugin";
 import { GameScene, PreloadScene } from './scenes';
-import { SingletonManager } from './decorators';
 import { OrientationManager } from './orientation';
 import { OrientationConfig, gameConfig } from './configs';
 
 class GameEngine extends Phaser.Game {
   private orientationConfig: OrientationConfig = new OrientationConfig();
-  private orientationManager: OrientationManager = SingletonManager.getInstance(OrientationManager, this, this.orientationConfig);
+  private orientationManager: OrientationManager = new OrientationManager(this, this.orientationConfig);
 
   constructor() {
     super(gameConfig);

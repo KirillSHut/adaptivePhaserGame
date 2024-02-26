@@ -5,10 +5,12 @@ export class OrientationStateManager {
     private orientationConfig: IOrientationStateManagedConfig;
     private _currentGameOrientation: EScreenOrientationWithDevice;
 
-    public init(config: IOrientationStateManagedConfig): void {
-        this.orientationConfig = config;
-
+    public init(): void {
         this.initCurrentGameOrientation();
+    }
+
+    public setConfig(config: IOrientationStateManagedConfig): void {
+        this.orientationConfig = config;
     }
 
     private initCurrentGameOrientation(): void {
@@ -24,10 +26,10 @@ export class OrientationStateManager {
     }
 
     public get currentWindowOrientation(): EScreenOrientationWithDevice {
-        const { isOrientationChangeSupported, supportedOrientations, defaultOrientation } = this.orientationConfig;
+        const { isOrientationChangeSupported, supportedOrientations, standardOrientation } = this.orientationConfig;
 
-        if (isOrientationChangeSupported) return OrientationUtil.getBySupportedOrientations(supportedOrientations);
+        if (isOrientationChangeSupported && supportedOrientations) return OrientationUtil.getBySupportedOrientations(supportedOrientations, standardOrientation);
 
-        return defaultOrientation;
+        return standardOrientation;
     }
 };

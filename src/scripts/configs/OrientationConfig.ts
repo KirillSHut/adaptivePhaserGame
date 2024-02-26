@@ -8,7 +8,7 @@ export class OrientationConfig implements IOrientationConfig {
         return 500;
     }
 
-    public get defaultOrientation(): EScreenOrientationWithDevice {
+    public get standardOrientation(): EScreenOrientationWithDevice {
         return EScreenOrientationWithDevice.LANDSCAPE_DESKTOP;
     }
 
@@ -25,7 +25,7 @@ export class OrientationConfig implements IOrientationConfig {
             },
             portrait: {
                 default: EScreenOrientationWithDevice.PORTRAIT_MOBILE,
-                desktop: EScreenOrientationWithDevice.PORTRAIT_DESKTOP,
+                desktop: EScreenOrientationWithDevice.LANDSCAPE_DESKTOP,
                 mobile: EScreenOrientationWithDevice.PORTRAIT_MOBILE
             }
         }
