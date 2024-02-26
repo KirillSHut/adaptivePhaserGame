@@ -1,5 +1,5 @@
 import { gameSizeConfig } from "../configs";
-import { EOrientationEvents, EScreenOrientationWithDevice, IOrientationConfig } from "../contracts";
+import { EOrientationEvents, EScreenOrientationWithDeviceType, IOrientationConfig } from "../contracts";
 import { SingletonManager } from "../decorators";
 import { OrientationChangeBlockersManager } from "./OrientationChangeBlockersManager";
 import { OrientationStateManager } from "./OrientationStateManager";
@@ -81,7 +81,7 @@ export class OrientationEventManager {
         return this.config.orientationChangeTimeoutDuration > 0 ? this.resizeHandlerWithTimeout.bind(this) : this.varifyOrientationChange.bind(this);
     }
 
-    public setCurrentGameOrientation(orientation: EScreenOrientationWithDevice): void {
+    public setCurrentGameOrientation(orientation: EScreenOrientationWithDeviceType): void {
         this.orientationStateManager.setCurrentGameOrientation(orientation);
     }
 
@@ -105,11 +105,11 @@ export class OrientationEventManager {
         return this._isOrientationChangeDelayed;
     }
 
-    public get currentWindowOrientation(): EScreenOrientationWithDevice {
+    public get currentWindowOrientation(): EScreenOrientationWithDeviceType {
         return this.orientationStateManager.currentWindowOrientation;
     }
 
-    public get currentGameOrientation(): EScreenOrientationWithDevice {
+    public get currentGameOrientation(): EScreenOrientationWithDeviceType {
         return this.orientationStateManager.currentGameOrientation;
     }
 

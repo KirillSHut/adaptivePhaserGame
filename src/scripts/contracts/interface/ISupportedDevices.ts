@@ -1,6 +1,6 @@
-import { EScreenOrientationWithDevice } from "../enums";
+import { EScreenOrientationWithDeviceType } from "../enums";
 
 export interface ISupportedDevices {
-    default: EScreenOrientationWithDevice,
-    [key: string]: EScreenOrientationWithDevice
+    default: EScreenOrientationWithDeviceType,
+    [key: string]: EScreenOrientationWithDeviceType
 }

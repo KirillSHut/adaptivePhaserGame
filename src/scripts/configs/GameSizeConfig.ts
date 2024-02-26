@@ -1,16 +1,16 @@
-import { EScreenOrientationWithDevice } from "../contracts";
+import { EScreenOrientationWithDeviceType } from "../contracts";
 
 
 export const gameSizeConfig = {
-    [EScreenOrientationWithDevice.LANDSCAPE_DESKTOP]: {
+    [EScreenOrientationWithDeviceType.LANDSCAPE_DESKTOP]: {
         width: 1920,
         height: 1080
     },
-    [EScreenOrientationWithDevice.LANDSCAPE_MOBILE]: {
+    [EScreenOrientationWithDeviceType.LANDSCAPE_MOBILE]: {
         width: 1920,
         height: 1080
     },
-    [EScreenOrientationWithDevice.PORTRAIT_MOBILE]: {
+    [EScreenOrientationWithDeviceType.PORTRAIT_MOBILE]: {
         width: 1080,
         height: 1920
     },

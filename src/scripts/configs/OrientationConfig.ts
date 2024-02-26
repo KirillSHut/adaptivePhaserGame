@@ -1,4 +1,4 @@
-import { EScreenOrientationWithDevice } from "../contracts";
+import { EScreenOrientationWithDeviceType } from "../contracts";
 import { IOrientationConfig } from "../contracts/interface/IOrientationConfig";
 import { ISupportedOrientations } from "../contracts/interface/ISupportedOrientations";
 
@@ -8,8 +8,8 @@ export class OrientationConfig implements IOrientationConfig {
         return 500;
     }
 
-    public get standardOrientation(): EScreenOrientationWithDevice {
-        return EScreenOrientationWithDevice.LANDSCAPE_DESKTOP;
+    public get standardOrientation(): EScreenOrientationWithDeviceType {
+        return EScreenOrientationWithDeviceType.LANDSCAPE_DESKTOP;
     }
 
     public get isOrientationChangeSupported(): boolean {
@@ -19,14 +19,14 @@ export class OrientationConfig implements IOrientationConfig {
     public get supportedOrientations(): ISupportedOrientations {
         return {
             landscape: {
-                default: EScreenOrientationWithDevice.LANDSCAPE_DESKTOP,
-                desktop: EScreenOrientationWithDevice.LANDSCAPE_DESKTOP,
-                mobile: EScreenOrientationWithDevice.LANDSCAPE_MOBILE
+                default: EScreenOrientationWithDeviceType.LANDSCAPE_DESKTOP,
+                desktop: EScreenOrientationWithDeviceType.LANDSCAPE_DESKTOP,
+                mobile: EScreenOrientationWithDeviceType.LANDSCAPE_MOBILE
             },
             portrait: {
-                default: EScreenOrientationWithDevice.PORTRAIT_MOBILE,
-                desktop: EScreenOrientationWithDevice.LANDSCAPE_DESKTOP,
-                mobile: EScreenOrientationWithDevice.PORTRAIT_MOBILE
+                default: EScreenOrientationWithDeviceType.PORTRAIT_MOBILE,
+                desktop: EScreenOrientationWithDeviceType.LANDSCAPE_DESKTOP,
+                mobile: EScreenOrientationWithDeviceType.PORTRAIT_MOBILE
             }
         }
     }

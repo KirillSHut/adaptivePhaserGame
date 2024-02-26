@@ -1,23 +1,23 @@
-import { EScreenOrientationWithDevice } from "../../contracts";
+import { EScreenOrientationWithDeviceType } from "../../contracts";
 
 
 export const gameSceneTextConfig = {
-    [EScreenOrientationWithDevice.LANDSCAPE_DESKTOP]: {
-        text: `Orientation: ${EScreenOrientationWithDevice.LANDSCAPE_DESKTOP}`,
+    [EScreenOrientationWithDeviceType.LANDSCAPE_DESKTOP]: {
+        text: `Orientation: ${EScreenOrientationWithDeviceType.LANDSCAPE_DESKTOP}`,
         styles: {
             color: '#000000',
             fontSize: '60px'
         }
     },
-    [EScreenOrientationWithDevice.LANDSCAPE_MOBILE]: {
-        text: `Orientation: ${EScreenOrientationWithDevice.LANDSCAPE_MOBILE}`,
+    [EScreenOrientationWithDeviceType.LANDSCAPE_MOBILE]: {
+        text: `Orientation: ${EScreenOrientationWithDeviceType.LANDSCAPE_MOBILE}`,
         styles: {
             color: '#000000',
             fontSize: '60px'
         }
     },
-    [EScreenOrientationWithDevice.PORTRAIT_MOBILE]: {
-        text: `Orientation: ${EScreenOrientationWithDevice.PORTRAIT_MOBILE}`,
+    [EScreenOrientationWithDeviceType.PORTRAIT_MOBILE]: {
+        text: `Orientation: ${EScreenOrientationWithDeviceType.PORTRAIT_MOBILE}`,
         styles: {
             color: '#000000',
             fontSize: '60px'

@@ -1,9 +1,9 @@
-import { EScreenOrientationWithDevice } from "../enums";
+import { EScreenOrientationWithDeviceType } from "../enums";
 import { ISupportedOrientations } from "./ISupportedOrientations";
 
 export interface IOrientationConfig {
     orientationChangeTimeoutDuration: number;
     isOrientationChangeSupported: boolean,
-    standardOrientation: EScreenOrientationWithDevice,
+    standardOrientation: EScreenOrientationWithDeviceType,
     supportedOrientations?: ISupportedOrientations
 }

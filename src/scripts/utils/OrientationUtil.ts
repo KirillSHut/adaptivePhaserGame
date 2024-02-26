@@ -1,8 +1,8 @@
 import Bowser from "bowser";
-import { EScreenOrientation, EScreenOrientationWithDevice, ISupportedDevices, ISupportedOrientations } from "../contracts";
+import { EScreenOrientation, EScreenOrientationWithDeviceType, ISupportedDevices, ISupportedOrientations } from "../contracts";
 
 export class OrientationUtil {
-    public static getBySupportedOrientations(supportedOrientations: ISupportedOrientations, standardOrientation: EScreenOrientationWithDevice): EScreenOrientationWithDevice {
+    public static getBySupportedOrientations(supportedOrientations: ISupportedOrientations, standardOrientation: EScreenOrientationWithDeviceType): EScreenOrientationWithDeviceType {
         const currentScreenOrientation = this.getCurrentScreenOrientation();
         const supportedDevices = supportedOrientations[currentScreenOrientation];
         const currentDeviceType = this.getCurrentDeviceTypeBySupportedDevices(supportedDevices);

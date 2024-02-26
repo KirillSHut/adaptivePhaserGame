@@ -1,16 +1,16 @@
-import { EScreenOrientationWithDevice } from "../../contracts";
+import { EScreenOrientationWithDeviceType } from "../../contracts";
 
 
 export const preloadSpineConfig = {
-    [EScreenOrientationWithDevice.LANDSCAPE_DESKTOP]: {
+    [EScreenOrientationWithDeviceType.LANDSCAPE_DESKTOP]: {
         x: 950,
         y: 400
     },
-    [EScreenOrientationWithDevice.LANDSCAPE_MOBILE]: {
+    [EScreenOrientationWithDeviceType.LANDSCAPE_MOBILE]: {
         x: 950,
         y: 400
     },
-    [EScreenOrientationWithDevice.PORTRAIT_MOBILE]: {
+    [EScreenOrientationWithDeviceType.PORTRAIT_MOBILE]: {
         x: 500,
         y: 800
     },

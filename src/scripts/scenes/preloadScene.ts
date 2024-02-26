@@ -1,6 +1,6 @@
 import { OrientationStateManager } from "../orientation";
 import { preloadSpineConfig } from "../configs";
-import { EOrientationEvents, EScreenOrientationWithDevice } from "../contracts";
+import { EOrientationEvents, EScreenOrientationWithDeviceType } from "../contracts";
 import { SingletonManager } from "../decorators";
 
 export class PreloadScene extends Phaser.Scene {
@@ -43,7 +43,7 @@ export class PreloadScene extends Phaser.Scene {
     }
 
     private addSpineOrientationChangeHandler(): void {
-        this.game.events.on(EOrientationEvents.ORIENTATION_CHANGED, (currentGameOrientation: EScreenOrientationWithDevice) => {
+        this.game.events.on(EOrientationEvents.ORIENTATION_CHANGED, (currentGameOrientation: EScreenOrientationWithDeviceType) => {
             const { x, y } = preloadSpineConfig[currentGameOrientation];
 
             this.spine.setPosition(x, y);
@@ -56,7 +56,7 @@ export class PreloadScene extends Phaser.Scene {
         })
     }
 
-    private get currentGameOrientation(): EScreenOrientationWithDevice {
+    private get currentGameOrientation(): EScreenOrientationWithDeviceType {
         return this.orientationStateManager.currentGameOrientation;
     }
 } 

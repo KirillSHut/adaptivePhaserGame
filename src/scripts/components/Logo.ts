@@ -1,5 +1,5 @@
 import { logoConfig } from "../configs";
-import { EOrientationEvents, EScreenOrientationWithDevice, ESpinEvents } from "../contracts";
+import { EOrientationEvents, EScreenOrientationWithDeviceType, ESpinEvents } from "../contracts";
 
 export class Logo extends Phaser.GameObjects.Sprite {
     constructor(scene: Phaser.Scene, x: number, y: number) {
@@ -63,7 +63,7 @@ export class Logo extends Phaser.GameObjects.Sprite {
     }
 
     public addOrientationChangeHandler(): void {
-        this.scene.game.events.on(EOrientationEvents.ORIENTATION_CHANGED, (currentGameOrientation: EScreenOrientationWithDevice) => {
+        this.scene.game.events.on(EOrientationEvents.ORIENTATION_CHANGED, (currentGameOrientation: EScreenOrientationWithDeviceType) => {
             const { x, y } = logoConfig[currentGameOrientation];
 
             this.setPosition(x, y);
