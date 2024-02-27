@@ -1,6 +1,5 @@
-import { EScreenOrientationWithDeviceType } from "../enums";
+import { EDevices, EScreenOrientationWithDeviceType } from "../enums";
 
-export interface ISupportedDevices {
-    default: EScreenOrientationWithDeviceType,
-    [key: string]: EScreenOrientationWithDeviceType
+export interface ISupportedDevices extends Partial<Record<EDevices, EScreenOrientationWithDeviceType>> {
+    [EDevices.DEFAULT]: EScreenOrientationWithDeviceType,
 }

@@ -1,32 +1,32 @@
 import Bowser from "bowser";
-import { EScreenOrientation, EScreenOrientationWithDeviceType, ISupportedDevices, ISupportedOrientations } from "../contracts";
+import { EDevices, EScreenOrientation, EScreenOrientationWithDeviceType, ISupportedDevices, ISupportedOrientations } from "../contracts";
 
 export class OrientationUtil {
-    public static getBySupportedOrientations(supportedOrientations: ISupportedOrientations, standardOrientation: EScreenOrientationWithDeviceType): EScreenOrientationWithDeviceType {
-        const currentScreenOrientation = this.getCurrentScreenOrientation();
+    public static getBasedOnSupported(supportedOrientations: ISupportedOrientations, standardOrientation: EScreenOrientationWithDeviceType): EScreenOrientationWithDeviceType {
+        const currentScreenOrientation = this.getScreenOrientation();
         const supportedDevices = supportedOrientations[currentScreenOrientation];
-        const currentDeviceType = this.getCurrentDeviceTypeBySupportedDevices(supportedDevices);
+        const currentDeviceType = this.getDeviceTypeBasedOnSupported(supportedDevices);
 
         if (currentDeviceType && supportedDevices) return supportedDevices[currentDeviceType]
 
         return standardOrientation;
     }
 
-    public static getCurrentDeviceTypeBySupportedDevices(supportedDevices?: ISupportedDevices): string | void {
-        if (!supportedDevices) return void "No supported devices for current orientation";
+    public static getDeviceTypeBasedOnSupported(supportedDevices?: ISupportedDevices): string | void {
+        if (!supportedDevices) return;
 
-        const currentDeviceType = this.getCurrentDeviceType();
+        const currentDeviceType = this.getDeviceType();
 
-        return supportedDevices[currentDeviceType] !== undefined ? currentDeviceType : "default";
+        return supportedDevices[currentDeviceType] !== undefined ? currentDeviceType : EDevices.DEFAULT;
     }
 
-    public static getCurrentDeviceType(): string {
+    public static getDeviceType(): string {
         const deviceType = Bowser.parse(window.navigator.userAgent).platform.type;
 
-        return deviceType ? deviceType : "default";
+        return deviceType ?? EDevices.DEFAULT;
     }
 
-    public static getCurrentScreenOrientation(): EScreenOrientation {
-        return window.innerWidth > window.innerHeight ? EScreenOrientation.LANDSCAPE : EScreenOrientation.PORTRAIT;
+    public static getScreenOrientation(): EScreenOrientation {
+        return window.innerHeight > window.innerWidth ? EScreenOrientation.PORTRAIT : EScreenOrientation.LANDSCAPE;
     }
 }

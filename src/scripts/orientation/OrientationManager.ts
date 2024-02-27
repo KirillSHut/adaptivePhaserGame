@@ -4,22 +4,25 @@ import { OrientationEventManager } from "./OrientationEventsManager";
 import { OrientationStateManager } from "./OrientationStateManager";
 
 export class OrientationManager {
-    private orientationEventsManager: OrientationEventManager = new OrientationEventManager(this.game, this.config);
+    private orientationEventsManager: OrientationEventManager = new OrientationEventManager(this._game, this._config);
     private orientationStateManager: OrientationStateManager = SingletonManager.getInstance(OrientationStateManager);
 
-    constructor(private game: Phaser.Game, private config: IOrientationConfig) { }
+    constructor(private _game: Phaser.Game, private _config: IOrientationConfig) { }
 
     public init(): void {
-        const { isOrientationChangeSupported } = this.config;
+        this.initOrientationStateManager();
+        this.initOrientationEventsManager();
+    }
+
+    private initOrientationEventsManager(): void {
+        const { isOrientationChangeSupported } = this._config;
 
         if (isOrientationChangeSupported) this.orientationEventsManager.init();
-
-        this.initOrientationStateManager();
         this.orientationEventsManager.changeGameSize();
     }
 
     private initOrientationStateManager(): void {
-        const { isOrientationChangeSupported, standardOrientation, supportedOrientations } = this.config;
+        const { isOrientationChangeSupported, standardOrientation, supportedOrientations } = this._config;
 
         this.orientationStateManager.setConfig({ isOrientationChangeSupported, standardOrientation, supportedOrientations });
         this.orientationStateManager.init();

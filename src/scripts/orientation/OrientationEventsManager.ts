@@ -5,13 +5,13 @@ import { OrientationChangeBlockersManager } from "./OrientationChangeBlockersMan
 import { OrientationStateManager } from "./OrientationStateManager";
 
 export class OrientationEventManager {
-    private orientationChangeBlockersManager: OrientationChangeBlockersManager = new OrientationChangeBlockersManager(this.game);
+    private orientationChangeBlockersManager: OrientationChangeBlockersManager = new OrientationChangeBlockersManager(this._game);
     private orientationStateManager: OrientationStateManager = SingletonManager.getInstance(OrientationStateManager);
 
     private _isOrientationChangeDelayed: boolean = false;
-    private _lastOrientationChangeTimeout: NodeJS.Timeout | null = null;
+    private _lastOrientationChangeTimeout: number | null = null;
 
-    constructor(private game: Phaser.Game, private config: IOrientationConfig) { }
+    constructor(private _game: Phaser.Game, private _config: IOrientationConfig) { }
 
     public init(): void {
         this.orientationChangeBlockersManager.init();
@@ -28,8 +28,8 @@ export class OrientationEventManager {
     }
 
     private addAllBlockersDeletedHandler(): void {
-        this.game.events.on(EOrientationEvents.ALL_BLOCKERS_DELETED, () => {
-            if (!this.isOrientationChangeDelayed) return;
+        this._game.events.on(EOrientationEvents.ALL_BLOCKERS_DELETED, () => {
+            if (!this._isOrientationChangeDelayed) return;
 
             this.varifyOrientationChange();
         })
@@ -57,18 +57,20 @@ export class OrientationEventManager {
         this.setCurrentGameOrientation(this.currentWindowOrientation);
 
         this.changeGameSize();
-        this.game.events.emit(EOrientationEvents.ORIENTATION_CHANGED, this.currentGameOrientation);
+        this._game.events.emit(EOrientationEvents.ORIENTATION_CHANGED, this.currentGameOrientation);
     }
 
     public changeGameSize(): void {
         const { width, height } = gameSizeConfig[this.currentGameOrientation];
 
-        this.game.scale.setGameSize(width, height);
+        this._game.scale.setGameSize(width, height);
     }
 
     private resizeHandlerWithTimeout(): void {
         this.clearLastOrientationChangeTimeout();
-        this._lastOrientationChangeTimeout = setTimeout(() => this.varifyOrientationChange(), this.config.orientationChangeTimeoutDuration)
+        // @ts-ignore 
+        // setTimeout here returns NodeJS.Timeout type, but in the browser setTimeout must return number
+        this._lastOrientationChangeTimeout = setTimeout(() => this.varifyOrientationChange(), this._config.orientationChangeDelay)
     }
 
     private clearLastOrientationChangeTimeout(): void {
@@ -78,10 +80,10 @@ export class OrientationEventManager {
     }
 
     private getResizeHandler(): () => void {
-        return this.config.orientationChangeTimeoutDuration > 0 ? this.resizeHandlerWithTimeout.bind(this) : this.varifyOrientationChange.bind(this);
+        return this._config.orientationChangeDelay > 0 ? this.resizeHandlerWithTimeout.bind(this) : this.varifyOrientationChange.bind(this);
     }
 
-    public setCurrentGameOrientation(orientation: EScreenOrientationWithDeviceType): void {
+    private setCurrentGameOrientation(orientation: EScreenOrientationWithDeviceType): void {
         this.orientationStateManager.setCurrentGameOrientation(orientation);
     }
 
@@ -99,10 +101,6 @@ export class OrientationEventManager {
 
     private get orientationHasNotChanged(): boolean {
         return this.currentGameOrientation === this.currentWindowOrientation;
-    }
-
-    private get isOrientationChangeDelayed(): boolean {
-        return this._isOrientationChangeDelayed;
     }
 
     public get currentWindowOrientation(): EScreenOrientationWithDeviceType {

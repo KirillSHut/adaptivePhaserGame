@@ -1,15 +1,15 @@
-import { EScreenOrientationWithDeviceType, IOrientationStateManagedConfig } from "../contracts";
+import { EScreenOrientationWithDeviceType, IOrientationStateManagerConfig } from "../contracts";
 import { OrientationUtil } from "../utils";
 
 export class OrientationStateManager {
-    private orientationConfig: IOrientationStateManagedConfig;
+    private orientationConfig: IOrientationStateManagerConfig;
     private _currentGameOrientation: EScreenOrientationWithDeviceType;
 
     public init(): void {
         this.initCurrentGameOrientation();
     }
 
-    public setConfig(config: IOrientationStateManagedConfig): void {
+    public setConfig(config: IOrientationStateManagerConfig): void {
         this.orientationConfig = config;
     }
 
@@ -28,7 +28,7 @@ export class OrientationStateManager {
     public get currentWindowOrientation(): EScreenOrientationWithDeviceType {
         const { isOrientationChangeSupported, supportedOrientations, standardOrientation } = this.orientationConfig;
 
-        if (isOrientationChangeSupported && supportedOrientations) return OrientationUtil.getBySupportedOrientations(supportedOrientations, standardOrientation);
+        if (isOrientationChangeSupported && supportedOrientations) return OrientationUtil.getBasedOnSupported(supportedOrientations, standardOrientation);
 
         return standardOrientation;
     }
